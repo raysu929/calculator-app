@@ -37,12 +37,47 @@ return divide(num1, num2);
 
 const display = document.getElementById("display");
 let currentInput = "";
+let firstNumber = null;
+let secondNumber = null;
+let currentOperator = null;
 
 const digitButtons = document.querySelectorAll(".digit");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalsButton = document.getElementById("equals");
+const clearButton = document.getElementById("clear");
 
 digitButtons.forEach(button => {
     button.addEventListener("click", () => {
         currentInput += button.textContent;
         display.textContent = currentInput;
 });
+});
+
+operatorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (currentInput === "") return;
+        firstNumber = parseFloat(currentInput);
+        currentOperator = button.textContent;
+        currentInput = "";
+    });
+});
+
+equalsButton.addEventListener("click", () => {
+    if (currentInput === "" || firstNumber === null || currentOperator === null) return;
+    secondNumber = parseFloat(currentInput);
+    const result = operate(firstNumber, secondNumber, currentOperator);
+    display.textContent = result;
+
+    currentInput = result.toString();
+    firstNumber = null;
+    secondNumber = null;
+    currentOperator = null;
+});
+
+clearButton.addEventListener("click", () => {
+    currentInput = "";
+    firstNumber = null;
+    secondNumber = null;
+    currentOperator = null;
+    display.textContent = "";
 });
