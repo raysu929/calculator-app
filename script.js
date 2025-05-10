@@ -30,9 +30,7 @@ result = subtract(num1, num2);
     } else if (operator === '*') {
         result = multiply(num1, num2);
     } else if (operator === '/') {
-        if (num2 === 0) {
-            return "Nice try. You can't divide by 0";
-        }
+        
 result = divide(num1, num2);
     } else {
      return "Invalid Operator";
@@ -46,6 +44,8 @@ const digitButtons = document.querySelectorAll(".digit");
 const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.getElementById("equals");
 const clearButton = document.getElementById("clear");
+const decimalButtons = document.querySelectorAll(".decimal");
+const deleteButton = document.querySelector(".backspace");
 
 let currentInput = "";
 let firstNumber = null;
@@ -62,6 +62,20 @@ digitButtons.forEach(button => {
         currentInput += button.textContent;
         display.textContent = currentInput;
 });
+});
+
+decimalButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (shouldResetDisplay) {
+            currentInput = "";
+            shouldResetDisplay = false;
+        }
+
+if (!currentInput.includes(".")) {
+    currentInput += button.textContent;
+    display.textContent = currentInput;
+}
+    });
 });
 
 operatorButtons.forEach(button => {
@@ -105,4 +119,10 @@ clearButton.addEventListener("click", () => {
     currentOperator = null;
     display.textContent = "";
     shouldResetDisplay = false;
+});
+
+deleteButton.addEventListener("click", () => {
+    if (shouldResetDisplay) return;
+    currentInput = currentInput.slice(0, -1);
+    display.textContent = currentInput;
 });
