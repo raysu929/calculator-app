@@ -34,3 +34,15 @@ return divide(num1, num2);
         return "Invalid Operator";
     }
 };
+
+const display = document.getElementById("display");
+let currentInput = "";
+
+const digitButtons = document.querySelectorAll(".digit");
+
+digitButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        currentInput += button.textContent;
+        display.textContent = currentInput;
+});
+});
