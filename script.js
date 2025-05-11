@@ -126,3 +126,93 @@ deleteButton.addEventListener("click", () => {
     currentInput = currentInput.slice(0, -1);
     display.textContent = currentInput;
 });
+
+function appendDigit(digit) {
+    if(shouldResetDisplay) {
+        currentInput = "";
+        shouldResetDisplay = false;
+    }
+    currentInput += digit;
+    display.textContent = currentInput;
+}
+
+function appendDecimal() {
+    if (shouldResetDisplay) {
+        currentInput = "";
+        shouldResetDisplay = false;
+    }
+    if (!currentInput.includes(".")) {
+        currentInput += ".";
+        display.textContent = currentInput;
+    }
+}
+
+function setOperator(operator) {
+    if (currentInput === "") return;
+
+    if (firstNumber !== null && currentOperator !== null) {
+        secondNumber = parseFloat(currentInput);
+        const result = operate(firstNumber, secondNumber, currentOperator);
+        display.textContent = result;
+        firstNumber = typeof result === "number" ? result : null;
+        currentInput = "";
+        currentOperator = operator;
+        shouldResetDisplay = true;
+        return;
+    }
+
+    firstNumber = parseFloat(currentInput);
+    currentOperator = operator;
+    currentInput = "";
+}
+
+function evaluate() {
+    if (currentInput === "" || firstNumber === null || currentOperator === null) return;
+    secondNumber = parseFloat(currentInput);
+    const result = operate(firstNumber, secondNumber, currentOperator);
+    display.textContent = result;
+
+    currentInput = typeof result === "number" ? result.toString() : "";
+    firstNumber = null;
+    secondNumber = null;
+    currentOperator = null;
+    shouldResetDisplay = true;
+}
+
+function clear() {
+    currentInput = "";
+    firstNumber = null;
+    secondNumber = null;
+    currentOperator = null;
+    display.textContent = "";
+    shouldResetDisplay = false;
+}
+
+function deleteLast() {
+    if (shouldResetDisplay) return;
+    currentInput = currentInput.slice(0, -1);
+    display.textContent = currentInput;
+}
+
+function handleKeyboardInput(e) {
+    if (e.key >= 0 && e.key <= 9 ) {
+        appendDigit(e.key);
+    }
+    if (e.key === ".") {
+        appendDecimal();
+    }
+    if (e.key === "=" || e.key === "Enter") {
+        evaluate();
+    }
+    if (e.key === "Backspace") {
+        deleteLast();
+    }
+    if (e.key === "Escape") {
+        clear();
+    }
+    if (["+", "-", "*", "/"].includes(e.key)) {
+        setOperator(e.key);
+    }
+}
+document.addEventListener("keydown", handleKeyboardInput);
+
